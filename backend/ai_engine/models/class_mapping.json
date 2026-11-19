@@ -1,0 +1,20 @@
+{
+  "classes": [
+    "Cement_bags",
+    "Cement_bricks",
+    "Sand",
+    "Steel"
+  ],
+  "class_to_idx": {
+    "Cement_bags": 0,
+    "Cement_bricks": 1,
+    "Sand": 2,
+    "Steel": 3
+  },
+  "idx_to_class": {
+    "0": "Cement_bags",
+    "1": "Cement_bricks",
+    "2": "Sand",
+    "3": "Steel"
+  }
+}

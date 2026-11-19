@@ -1,0 +1,60 @@
+{
+  "classes": [
+    "Cement_bags",
+    "Cement_bricks",
+    "Sand",
+    "Steel"
+  ],
+  "class_to_idx": {
+    "Cement_bags": 0,
+    "Cement_bricks": 1,
+    "Sand": 2,
+    "Steel": 3
+  },
+  "training_summary": {
+    "total_epochs": 8,
+    "train_samples": 254,
+    "val_samples": 52,
+    "test_samples": 60,
+    "best_val_accuracy": 86.54,
+    "model_architecture": "EfficientNet-B0 (Pretrained Transfer Learning)"
+  },
+  "test_metrics": {
+    "accuracy": 91.67,
+    "macro_precision": 93.33,
+    "macro_recall": 91.35,
+    "macro_f1": 92.01
+  },
+  "per_class_metrics": {
+    "Cement_bags": {
+      "precision": 0.9333,
+      "recall": 0.9333,
+      "f1-score": 0.9333,
+      "support": 15
+    },
+    "Cement_bricks": {
+      "precision": 0.8000,
+      "recall": 0.9412,
+      "f1-score": 0.8649,
+      "support": 17
+    },
+    "Sand": {
+      "precision": 1.0000,
+      "recall": 0.8462,
+      "f1-score": 0.9167,
+      "support": 13
+    },
+    "Steel": {
+      "precision": 1.0000,
+      "recall": 0.9333,
+      "f1-score": 0.9655,
+      "support": 15
+    }
+  },
+  "confusion_matrix": [
+    [14, 1, 0, 0],
+    [1, 16, 0, 0],
+    [0, 2, 11, 0],
+    [0, 1, 0, 14]
+  ]
+}
