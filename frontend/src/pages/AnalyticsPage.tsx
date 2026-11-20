@@ -31,6 +31,25 @@ interface AnalyticsPageProps {
   onNavigateToInspection?: () => void;
 }
 
+const emptySummary: AnalyticsSummary = {
+  total_inspected: 0,
+  total_good: 0,
+  total_damaged: 0,
+  total_inspection_required: 0,
+  total_reuse: 0,
+  total_repair: 0,
+  total_recycle: 0,
+  total_reject: 0,
+  total_inspect: 0,
+  estimated_reusable_quantity: 0,
+  reuse_rate_percentage: 0,
+  category_distribution: [],
+  condition_distribution: [],
+  recommendation_distribution: [],
+  timeline_trend: [],
+  recent_inspections: []
+};
+
 export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onNavigateToInspection }) => {
   const [data, setData] = useState<AnalyticsSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +61,8 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onNavigateToInspec
         const res = await api.getAnalyticsSummary();
         setData(res);
       } catch (err) {
-        console.error('Failed to load analytics:', err);
+        console.warn('Failed to load analytics from server, using default summary:', err);
+        setData(emptySummary);
       } finally {
         setIsLoading(false);
       }

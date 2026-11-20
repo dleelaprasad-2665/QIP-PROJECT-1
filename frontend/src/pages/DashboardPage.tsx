@@ -35,6 +35,39 @@ interface DashboardProps {
   onSelectItemForInspection?: (item: MaterialInspectionItem) => void;
 }
 
+const emptySummary: AnalyticsSummary = {
+  total_inspected: 0,
+  total_good: 0,
+  total_damaged: 0,
+  total_inspection_required: 0,
+  total_reuse: 0,
+  total_repair: 0,
+  total_recycle: 0,
+  total_reject: 0,
+  total_inspect: 0,
+  estimated_reusable_quantity: 0,
+  reuse_rate_percentage: 0,
+  category_distribution: [
+    { category: 'Steel', count: 0 },
+    { category: 'Bricks', count: 0 },
+    { category: 'Cement', count: 0 },
+    { category: 'Sand', count: 0 }
+  ],
+  condition_distribution: [
+    { name: 'GOOD', value: 0, color: '#16a34a' },
+    { name: 'DAMAGED', value: 0, color: '#dc2626' },
+    { name: 'INSPECT', value: 0, color: '#ca8a04' }
+  ],
+  recommendation_distribution: [
+    { name: 'REUSE', value: 0, color: '#16a34a' },
+    { name: 'REPAIR', value: 0, color: '#ea580c' },
+    { name: 'RECYCLE', value: 0, color: '#2563eb' },
+    { name: 'REJECT', value: 0, color: '#dc2626' }
+  ],
+  timeline_trend: [],
+  recent_inspections: []
+};
+
 export const DashboardPage: React.FC<DashboardProps> = ({ onNavigate }) => {
   const [data, setData] = useState<AnalyticsSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +79,8 @@ export const DashboardPage: React.FC<DashboardProps> = ({ onNavigate }) => {
         const res = await api.getAnalyticsSummary();
         setData(res);
       } catch (err) {
-        console.error('Failed to load dashboard analytics:', err);
+        console.warn('Backend not reached, showing default dashboard:', err);
+        setData(emptySummary);
       } finally {
         setIsLoading(false);
       }

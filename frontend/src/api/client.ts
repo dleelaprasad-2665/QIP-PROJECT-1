@@ -6,15 +6,26 @@ import {
   ModelEvaluation
 } from '../types';
 
-const BACKEND_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
-const API_BASE = `${BACKEND_URL}/api`;
+export function getBackendUrl(): string {
+  const custom = typeof window !== 'undefined' ? localStorage.getItem('backend_url') : null;
+  if (custom && custom.trim()) {
+    return custom.trim().replace(/\/$/, '');
+  }
+  return (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+}
+
+export function getApiBase(): string {
+  const backend = getBackendUrl();
+  return backend ? `${backend}/api` : '/api';
+}
 
 export function getImageUrl(path: string | null | undefined): string {
   if (!path) return '';
   if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('blob:') || path.startsWith('data:')) {
     return path;
   }
-  return `${BACKEND_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+  const backend = getBackendUrl();
+  return `${backend}${path.startsWith('/') ? '' : '/'}${path}`;
 }
 
 function getAuthHeaders(): HeadersInit {
@@ -29,7 +40,7 @@ function getAuthHeaders(): HeadersInit {
 export const api = {
   // Auth
   async login(username: string, password: string): Promise<{ access_token: string; user: User }> {
-    const res = await fetch(`${API_BASE}/auth/login`, {
+    const res = await fetch(`${getApiBase()}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
@@ -42,7 +53,7 @@ export const api = {
   },
 
   async register(data: { username: string; email: string; full_name: string; role: string; password: string }): Promise<{ access_token: string; user: User }> {
-    const res = await fetch(`${API_BASE}/auth/register`, {
+    const res = await fetch(`${getApiBase()}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -55,7 +66,7 @@ export const api = {
   },
 
   async getMe(): Promise<User> {
-    const res = await fetch(`${API_BASE}/auth/me`, {
+    const res = await fetch(`${getApiBase()}/auth/me`, {
       headers: getAuthHeaders()
     });
     if (!res.ok) {
@@ -81,7 +92,7 @@ export const api = {
       'Expires': '0'
     };
 
-    const res = await fetch(`${API_BASE}/ai/analyze`, {
+    const res = await fetch(`${getApiBase()}/ai/analyze`, {
       method: 'POST',
       headers,
       body: formData,
@@ -96,7 +107,7 @@ export const api = {
   },
 
   async getModelEvaluation(): Promise<ModelEvaluation> {
-    const res = await fetch(`${API_BASE}/ai/evaluation`);
+    const res = await fetch(`${getApiBase()}/ai/evaluation`);
     if (!res.ok) {
       throw new Error('Failed to load model evaluation metrics.');
     }
@@ -124,7 +135,7 @@ export const api = {
     if (params?.limit) query.append('limit', params.limit.toString());
     if (params?.offset) query.append('offset', params.offset.toString());
 
-    const url = `${API_BASE}/inventory?${query.toString()}`;
+    const url = `${getApiBase()}/inventory?${query.toString()}`;
     const res = await fetch(url, { headers: getAuthHeaders() });
     if (!res.ok) {
       throw new Error('Failed to fetch inventory.');
@@ -133,7 +144,7 @@ export const api = {
   },
 
   async getInventoryItem(id: string): Promise<MaterialInspectionItem> {
-    const res = await fetch(`${API_BASE}/inventory/${id}`, {
+    const res = await fetch(`${getApiBase()}/inventory/${id}`, {
       headers: getAuthHeaders()
     });
     if (!res.ok) {
@@ -160,7 +171,7 @@ export const api = {
     inspection_status: string;
     notes?: string;
   }): Promise<MaterialInspectionItem> {
-    const res = await fetch(`${API_BASE}/inventory`, {
+    const res = await fetch(`${getApiBase()}/inventory`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -176,7 +187,7 @@ export const api = {
   },
 
   async updateInventoryItem(id: string, data: Partial<MaterialInspectionItem>): Promise<MaterialInspectionItem> {
-    const res = await fetch(`${API_BASE}/inventory/${id}`, {
+    const res = await fetch(`${getApiBase()}/inventory/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -191,7 +202,7 @@ export const api = {
   },
 
   async deleteInventoryItem(id: string): Promise<{ success: boolean; message: string }> {
-    const res = await fetch(`${API_BASE}/inventory/${id}`, {
+    const res = await fetch(`${getApiBase()}/inventory/${id}`, {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
@@ -203,7 +214,7 @@ export const api = {
 
   // Analytics
   async getAnalyticsSummary(): Promise<AnalyticsSummary> {
-    const res = await fetch(`${API_BASE}/analytics/summary`, {
+    const res = await fetch(`${getApiBase()}/analytics/summary`, {
       headers: getAuthHeaders()
     });
     if (!res.ok) {
@@ -214,7 +225,7 @@ export const api = {
 
   // Reports
   async listReports(): Promise<{ id: string; material_category: string; condition: string; recommendation: string; created_at: string; inspector_name: string; pdf_url: string }[]> {
-    const res = await fetch(`${API_BASE}/reports/list`, {
+    const res = await fetch(`${getApiBase()}/reports/list`, {
       headers: getAuthHeaders()
     });
     if (!res.ok) {
@@ -224,7 +235,7 @@ export const api = {
   },
 
   getPdfReportUrl(id: string): string {
-    return `${API_BASE}/reports/${id}/pdf`;
+    return `${getApiBase()}/reports/${id}/pdf`;
   },
 
   getImageUrl(path: string | null | undefined): string {

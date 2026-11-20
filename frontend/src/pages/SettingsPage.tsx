@@ -5,13 +5,29 @@ import {
   Sliders,
   CheckCircle2,
   Save,
-  RotateCcw
+  RotateCcw,
+  Server,
+  Globe
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { RoleBadge } from '../components/common/Badge';
+import { getBackendUrl } from '../api/client';
 
 export const SettingsPage: React.FC = () => {
   const { user, switchRoleDemo } = useAuth();
+
+  // Backend API URL configuration
+  const [backendUrl, setBackendUrl] = useState(() => getBackendUrl());
+  const [urlSaved, setUrlSaved] = useState(false);
+
+  const handleSaveBackendUrl = () => {
+    localStorage.setItem('backend_url', backendUrl.trim());
+    setUrlSaved(true);
+    setTimeout(() => {
+      setUrlSaved(false);
+      window.location.reload();
+    }, 1200);
+  };
 
   // Configurable AI sensitivity parameters
   const [crackThreshold, setCrackThreshold] = useState(18);
@@ -40,6 +56,48 @@ export const SettingsPage: React.FC = () => {
         </h1>
         <p className="text-gray-500 text-xs mt-1">
           Manage user credentials, test-drive role permissions, and tune computer vision defect sensitivity thresholds.
+        </p>
+      </div>
+
+      {/* Backend API Server Configuration */}
+      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-xs space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-2">
+            <Server className="w-4 h-4 text-blue-600" />
+            <span>AI Backend API Server Endpoint</span>
+          </h3>
+          {urlSaved && (
+            <span className="text-xs text-emerald-700 font-mono flex items-center gap-1 font-semibold">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Saved & Reloading...
+            </span>
+          )}
+        </div>
+
+        <p className="text-xs text-gray-500 leading-relaxed">
+          Specify the host address of the FastAPI Computer Vision backend (e.g., when hosted on Render or local machine).
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="relative flex-1">
+            <Globe className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
+            <input
+              type="text"
+              value={backendUrl}
+              onChange={(e) => setBackendUrl(e.target.value)}
+              placeholder="e.g. http://localhost:8000 or https://your-backend.onrender.com"
+              className="w-full pl-9 pr-3 py-2 text-xs font-mono border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 text-gray-800"
+            />
+          </div>
+          <button
+            onClick={handleSaveBackendUrl}
+            className="text-xs bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition-colors shadow-xs shrink-0 flex items-center justify-center gap-1.5"
+          >
+            <Save className="w-3.5 h-3.5" />
+            <span>Save & Connect</span>
+          </button>
+        </div>
+        <p className="text-[11px] text-gray-400">
+          Current active endpoint: <strong className="font-mono text-gray-700">{backendUrl || 'Local / Same-Origin (/api)'}</strong>
         </p>
       </div>
 
