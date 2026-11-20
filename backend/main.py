@@ -32,9 +32,11 @@ from backend.ai_engine import (
     MaterialClassifier, DefectDetector, ConditionRecommender, get_model_evaluation
 )
 from backend.reports.pdf_generator import generate_pdf_report
+from backend.seed_data import seed_database
 
-# Initialize DB tables
+# Initialize DB tables and seed default accounts
 Base.metadata.create_all(bind=engine)
+seed_database()
 
 app = FastAPI(
     title="AI Construction Material Quality Assessment & Reusability Management API",
