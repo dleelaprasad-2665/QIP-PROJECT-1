@@ -132,7 +132,7 @@ export const InspectionHistoryPage: React.FC<InspectionHistoryPageProps> = ({ on
                     </td>
                     <td className="py-2.5 px-4">
                       <img
-                        src={item.annotated_image_path || item.original_image_path}
+                        src={api.getImageUrl(item.annotated_image_path || item.original_image_path)}
                         alt={item.material_category}
                         className="w-9 h-9 object-cover rounded border border-gray-200 bg-gray-50"
                       />

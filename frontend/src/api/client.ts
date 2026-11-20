@@ -6,7 +6,16 @@ import {
   ModelEvaluation
 } from '../types';
 
-const API_BASE = '/api';
+const BACKEND_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+const API_BASE = `${BACKEND_URL}/api`;
+
+export function getImageUrl(path: string | null | undefined): string {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('blob:') || path.startsWith('data:')) {
+    return path;
+  }
+  return `${BACKEND_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+}
 
 function getAuthHeaders(): HeadersInit {
   const token = localStorage.getItem('token');
@@ -216,5 +225,9 @@ export const api = {
 
   getPdfReportUrl(id: string): string {
     return `${API_BASE}/reports/${id}/pdf`;
+  },
+
+  getImageUrl(path: string | null | undefined): string {
+    return getImageUrl(path);
   }
 };

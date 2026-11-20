@@ -541,7 +541,7 @@ export const MaterialInspectionPage: React.FC<MaterialInspectionPageProps> = ({ 
 
                     <div className="rounded-lg overflow-hidden border border-gray-200 aspect-video bg-black relative">
                       <img
-                        src={viewMode === 'annotated' ? result.annotated_image_url : result.original_image_url}
+                        src={api.getImageUrl(viewMode === 'annotated' ? result.annotated_image_url : result.original_image_url)}
                         alt="Material defect map"
                         className="w-full h-full object-contain"
                       />

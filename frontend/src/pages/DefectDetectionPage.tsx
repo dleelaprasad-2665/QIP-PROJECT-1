@@ -141,7 +141,7 @@ export const DefectDetectionPage: React.FC<DefectDetectionPageProps> = ({ onNavi
             {/* Canvas Viewport with Defect Overlay */}
             <div className="relative rounded-lg overflow-hidden border border-gray-200 bg-black aspect-video flex items-center justify-center">
               <img
-                src={selectedItem.annotated_image_path || selectedItem.original_image_path}
+                src={api.getImageUrl(selectedItem.annotated_image_path || selectedItem.original_image_path)}
                 alt="Defect visual overlay"
                 className="w-full h-full object-contain"
               />
@@ -269,7 +269,7 @@ export const DefectDetectionPage: React.FC<DefectDetectionPageProps> = ({ onNavi
                 >
                   <div className="flex items-center gap-2">
                     <img
-                      src={it.original_image_path}
+                      src={api.getImageUrl(it.original_image_path)}
                       alt={it.material_category}
                       className="w-7 h-7 rounded object-cover border border-gray-200"
                     />
